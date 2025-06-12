@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NatureFlow - Custom-Branded Bottled Water</title>
+    
+    <!-- Application logic and structure are identical to the Urdu version, translated for an English audience. -->
+    <!-- All interactive elements (customizer, calculator, chart) are preserved. -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .bottle {
+            width: 150px;
+            height: 350px;
+            background-color: #a7d8f0;
+            border: 2px solid #1e3a8a;
+            border-radius: 15px 15px 5px 5px;
+            position: relative;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .bottle-cap {
+            width: 70px;
+            height: 40px;
+            background-color: #2563eb;
+            border: 2px solid #1e3a8a;
+            border-radius: 10px 10px 0 0;
+            position: absolute;
+            top: -42px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: background-color 0.3s;
+        }
+        .bottle-neck {
+            width: 60px;
+            height: 30px;
+            background-color: #a7d8f0;
+            border-left: 2px solid #1e3a8a;
+            border-right: 2px solid #1e3a8a;
+            margin: 0 auto;
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .bottle-label {
+            width: 90%;
+            height: 120px;
+            background-color: #ffffff;
+            border: 2px dashed #1e3a8a;
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 5px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #1e3a8a;
+            overflow-wrap: break-word;
+        }
+        .water-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 95%;
+            background-color: #dbeafe;
+            border-radius: 0 0 3px 3px;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="container mx-auto px-4 py-8">
+
+        <!-- Header Section -->
+        <header class="text-center mb-16">
+            <h1 class="text-5xl md:text-6xl font-bold text-blue-900">🌊 NatureFlow</h1>
+            <p class="mt-4 text-xl md:text-2xl text-slate-600">High-Quality, Custom-Branded Bottled Water for Your Business</p>
+        </header>
+
+        <!-- Product Highlights Section -->
+        <section id="product" class="mb-20">
+            <h2 class="text-4xl font-bold text-center mb-4 text-blue-800">Our Product</h2>
+            <p class="text-center text-lg text-slate-600 mb-12 max-w-3xl mx-auto">
+                Every aspect of our product is designed to ensure quality and excellence. We provide you with a product that is not only safe to drink but also enhances the value of your brand.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-slate-200">
+                    <h3 class="text-2xl font-bold text-blue-700 mb-2">Premium Bottle</h3>
+                    <p class="text-4xl font-bold">33g</p>
+                    <p class="text-slate-500">Sturdy & High-Quality</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-slate-200">
+                    <h3 class="text-2xl font-bold text-blue-700 mb-2">Water pH Level</h3>
+                    <p class="text-4xl font-bold">7.5</p>
+                    <p class="text-slate-500">Perfectly Balanced & Healthy</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-slate-200">
+                    <h3 class="text-2xl font-bold text-blue-700 mb-2">Sticker Quality</h3>
+                    <p class="text-4xl font-bold">Superior</p>
+                    <p class="text-slate-500">High-Tack Adhesive Sticker</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Customization Section -->
+        <section id="customization" class="mb-20 bg-slate-100 p-8 rounded-2xl">
+            <h2 class="text-4xl font-bold text-center mb-4 text-blue-800">Full Customization</h2>
+            <p class="text-center text-lg text-slate-600 mb-12 max-w-3xl mx-auto">
+                Personalize your bottle with our app. Choose the cap color and sticker design to match your brand identity. See what your bottle will look like.
+            </p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="flex flex-col items-center">
+                    <div class="bottle">
+                         <div class="bottle-neck"></div>
+                         <div id="bottle-cap" class="bottle-cap"></div>
+                         <div id="bottle-label" class="bottle-label">Your Brand</div>
+                         <div class="water-fill"></div>
+                    </div>
+                </div>
+                <div class="space-y-8">
+                    <div>
+                        <label for="brandName" class="block text-xl font-bold mb-2">Enter Your Brand Name:</label>
+                        <input type="text" id="brandName" class="w-full p-3 border border-slate-300 rounded-lg text-lg" placeholder="e.g., NatureFlow">
+                    </div>
+                    <div>
+                        <label class="block text-xl font-bold mb-2">Select Cap Color:</label>
+                        <div class="flex flex-wrap gap-3">
+                            <button class="cap-color-btn w-12 h-12 rounded-full border-4 border-white shadow" style="background-color: #2563eb;" data-color="#2563eb"></button>
+                            <button class="cap-color-btn w-12 h-12 rounded-full border-4 border-white shadow" style="background-color: #dc2626;" data-color="#dc2626"></button>
+                            <button class="cap-color-btn w-12 h-12 rounded-full border-4 border-white shadow" style="background-color: #16a34a;" data-color="#16a34a"></button>
+                            <button class="cap-color-btn w-12 h-12 rounded-full border-4 border-white shadow" style="background-color: #000000;" data-color="#000000"></button>
+                            <button class="cap-color-btn w-12 h-12 rounded-full border-4 border-white shadow" style="background-color: #ffffff;" data-color="#ffffff"></button>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-lg font-bold">Sticker Design:</p>
+                        <p class="text-slate-600">We provide fully customized designs for your brand. We will work with you to create the perfect design.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing and Profit Section -->
+        <section id="pricing" class="mb-20">
+            <h2 class="text-4xl font-bold text-center mb-4 text-blue-800">Pricing & Profit Analysis</h2>
+             <p class="text-center text-lg text-slate-600 mb-12 max-w-3xl mx-auto">
+                Calculate your potential cost, revenue, and profit using our interactive calculator. See how 'NatureFlow' can be a profitable venture for your business.
+            </p>
+            <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200">
+                <div class="mb-8">
+                    <label for="quantitySlider" class="block text-xl font-bold mb-2">Number of Bottles: <span id="quantityLabel" class="text-blue-600 font-bold">1,000</span></label>
+                    <input type="range" id="quantitySlider" min="500" max="10000" step="100" value="1000" class="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 text-center">
+                    <div class="bg-red-100 p-6 rounded-lg">
+                        <h4 class="text-xl font-bold text-red-800">Total Cost</h4>
+                        <p id="totalCost" class="text-3xl font-bold text-red-900">₹18,000</p>
+                    </div>
+                    <div class="bg-blue-100 p-6 rounded-lg">
+                        <h4 class="text-xl font-bold text-blue-800">Total Revenue (at MRP)</h4>
+                        <p id="totalRevenue" class="text-3xl font-bold text-blue-900">₹30,000</p>
+                    </div>
+                    <div class="bg-green-100 p-6 rounded-lg">
+                        <h4 class="text-xl font-bold text-green-800">Your Total Profit</h4>
+                        <p id="totalProfit" class="text-3xl font-bold text-green-900">₹12,000</p>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="profitChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Order Process Section -->
+        <section id="order-process" class="mb-16">
+            <h2 class="text-4xl font-bold text-center mb-4 text-blue-800">Ordering Process</h2>
+            <p class="text-center text-lg text-slate-600 mb-12 max-w-3xl mx-auto">
+                Our ordering process is simple and straightforward. We also offer storage facilities so you can get deliveries as per your requirement.
+            </p>
+            <div class="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-0">
+                <div class="flex-1 text-center p-6">
+                    <div class="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4">1</div>
+                    <h3 class="text-2xl font-bold mb-2">Minimum Order</h3>
+                    <p class="text-lg text-slate-600">Start with a minimum order of 200 boxes.</p>
+                </div>
+                <div class="hidden md:block text-slate-300 text-4xl px-4">→</div>
+                 <div class="flex-1 text-center p-6">
+                    <div class="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4">2</div>
+                    <h3 class="text-2xl font-bold mb-2">Storage Facility</h3>
+                    <p class="text-lg text-slate-600">We store your remaining boxes securely.</p>
+                </div>
+                <div class="hidden md:block text-slate-300 text-4xl px-4">→</div>
+                 <div class="flex-1 text-center p-6">
+                    <div class="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4">3</div>
+                    <h3 class="text-2xl font-bold mb-2">On-Demand Delivery</h3>
+                    <p class="text-lg text-slate-600">Get a minimum of 50 boxes per delivery.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center mt-16 pt-8 border-t border-slate-200">
+            <p class="text-lg text-slate-700">Elevate your brand with clean, healthy, and custom-branded water.</p>
+            <p class="text-slate-500 mt-2">© 2024 NatureFlow. All rights reserved.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Customization Logic
+            const brandNameInput = document.getElementById('brandName');
+            const bottleLabel = document.getElementById('bottle-label');
+            const bottleCap = document.getElementById('bottle-cap');
+            const colorButtons = document.querySelectorAll('.cap-color-btn');
+
+            brandNameInput.addEventListener('input', function() {
+                bottleLabel.textContent = this.value || 'Your Brand';
+            });
+
+            colorButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const color = this.dataset.color;
+                    bottleCap.style.backgroundColor = color;
+                });
+            });
+
+            // Pricing Calculator & Chart Logic
+            const quantitySlider = document.getElementById('quantitySlider');
+            const quantityLabel = document.getElementById('quantityLabel');
+            const totalCostEl = document.getElementById('totalCost');
+            const totalRevenueEl = document.getElementById('totalRevenue');
+            const totalProfitEl = document.getElementById('totalProfit');
+
+            const costPerBottle = 18;
+            const mrpPerBottle = 30;
+
+            const ctx = document.getElementById('profitChart').getContext('2d');
+            
+            const profitChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Cost', 'Revenue', 'Profit'],
+                    datasets: [{
+                        label: 'Amount in Rupees',
+                        data: [0, 0, 0],
+                        backgroundColor: [
+                            'rgba(254, 202, 202, 0.8)', // Red
+                            'rgba(191, 219, 254, 0.8)', // Blue
+                            'rgba(187, 247, 208, 0.8)'  // Green
+                        ],
+                        borderColor: [
+                            'rgba(220, 38, 38, 1)',
+                            'rgba(37, 99, 235, 1)',
+                            'rgba(22, 163, 74, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            bodyFont: {
+                                family: "'Inter', sans-serif"
+                            },
+                            titleFont: {
+                                family: "'Inter', sans-serif"
+                            },
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '₹' + value.toLocaleString('en-IN');
+                                },
+                                font: {
+                                    family: "'Inter', sans-serif",
+                                    size: 12
+                                }
+                            }
+                        },
+                        x: {
+                             ticks: {
+                                font: {
+                                    family: "'Inter', sans-serif",
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            function updateCalculator() {
+                const quantity = parseInt(quantitySlider.value);
+                const totalCost = quantity * costPerBottle;
+                const totalRevenue = quantity * mrpPerBottle;
+                const totalProfit = totalRevenue - totalCost;
+
+                quantityLabel.textContent = quantity.toLocaleString('en-IN');
+                totalCostEl.textContent = '₹' + totalCost.toLocaleString('en-IN');
+                totalRevenueEl.textContent = '₹' + totalRevenue.toLocaleString('en-IN');
+                totalProfitEl.textContent = '₹' + totalProfit.toLocaleString('en-IN');
+
+                profitChart.data.datasets[0].data = [totalCost, totalRevenue, totalProfit];
+                profitChart.update();
+            }
+
+            quantitySlider.addEventListener('input', updateCalculator);
+            
+            updateCalculator();
+        });
+    </script>
+</body>
+</html>
